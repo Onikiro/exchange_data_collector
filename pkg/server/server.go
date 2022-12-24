@@ -7,6 +7,7 @@ import (
 
 	"exchange-data-collector/pkg/db"
 	"exchange-data-collector/pkg/listener"
+	"exchange-data-collector/pkg/reader"
 )
 
 func Start() {
@@ -19,11 +20,9 @@ func Start() {
 	e.GET("/configs", getConfigs)
 	e.DELETE("/configs/:symbol", deleteConfig)
 
-	e.Logger.Fatal(e.Start(":1323"))
-}
+	e.GET("/read", readData)
 
-type Config struct {
-	Symbol string
+	e.Logger.Fatal(e.Start(":1323"))
 }
 
 // e.POST("/configs", postConfig)
@@ -62,4 +61,29 @@ func deleteConfig(c echo.Context) error {
 
 	listener.StopListening(symbol)
 	return c.JSON(http.StatusOK, symbol)
+}
+
+// e.GET("/read", readData)
+func readData(c echo.Context) error {
+	readRequest := new(ReadRequest)
+	if err := c.Bind(readRequest); err != nil {
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	data, err := reader.Read(readRequest.From, readRequest.To, readRequest.Symbol)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
+	return c.JSON(http.StatusOK, data)
+}
+
+type Config struct {
+	Symbol string
+}
+
+type ReadRequest struct {
+	Symbol string
+	From   string
+	To     string
 }
