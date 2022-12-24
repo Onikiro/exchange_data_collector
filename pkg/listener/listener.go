@@ -17,6 +17,7 @@ type Connection struct {
 	Client   *influxdb2.Client
 	WriteApi *api.WriteAPI
 	StopC    chan struct{}
+	DoneC    chan struct{}
 }
 
 var connections = sync.Map{}
@@ -29,7 +30,7 @@ func Listen(symbol string) {
 	config := config.LoadConfig()
 	client, writeAPI := createInfluxClient(config)
 
-	_, stopC, err := binance.WsBookTickerServe(symbol, handleWsEvent(writeAPI), handleErr())
+	doneC, stopC, err := binance.WsBookTickerServe(symbol, handleWsEvent(writeAPI), handleErr())
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -39,6 +40,7 @@ func Listen(symbol string) {
 		Client:   client,
 		WriteApi: writeAPI,
 		StopC:    stopC,
+		DoneC:    doneC,
 	})
 }
 
@@ -50,6 +52,7 @@ func StopListening(symbol string) {
 
 	v := connection.(Connection)
 	v.StopC <- struct{}{}
+	<-v.DoneC
 	(*v.Client).Close()
 
 	connections.Delete(symbol)

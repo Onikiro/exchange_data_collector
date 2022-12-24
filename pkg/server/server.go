@@ -22,9 +22,21 @@ func Start() {
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
+type Config struct {
+	Symbol string
+}
+
 // e.POST("/configs", postConfig)
 func postConfig(c echo.Context) error {
-	symbol := c.FormValue("symbol")
+	config := new(Config)
+	if err := c.Bind(config); err != nil {
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	symbol := config.Symbol
+	if len(symbol) == 0 {
+		return c.NoContent(http.StatusBadRequest)
+	}
 
 	if !db.AddConfig(symbol) {
 		return c.NoContent(http.StatusBadRequest)
