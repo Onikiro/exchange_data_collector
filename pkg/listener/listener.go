@@ -21,6 +21,7 @@ type Connection struct {
 
 var connections = sync.Map{}
 
+// WaitGroup in case of need blocking
 var Wg = sync.WaitGroup{}
 
 func Listen(symbol string) {
