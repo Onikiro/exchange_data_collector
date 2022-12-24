@@ -29,7 +29,7 @@ func Start() {
 func postConfig(c echo.Context) error {
 	config := new(Config)
 	if err := c.Bind(config); err != nil {
-		return c.JSON(http.StatusBadRequest, err)
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
 	symbol := config.Symbol
@@ -67,12 +67,12 @@ func deleteConfig(c echo.Context) error {
 func readData(c echo.Context) error {
 	readRequest := new(ReadRequest)
 	if err := c.Bind(readRequest); err != nil {
-		return c.JSON(http.StatusBadRequest, err)
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
 	data, err := reader.Read(readRequest.From, readRequest.To, readRequest.Symbol)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, data)

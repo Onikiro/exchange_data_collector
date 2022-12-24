@@ -32,14 +32,14 @@ func Read(from string, to string, symbol string) (*MeasurementData, error) {
 	if err != nil {
 		log.SetPrefix("ERROR: ")
 		log.Println(err)
-		return nil, errors.New("time format is not rfc3339")
+		return nil, errors.New("time format is not rfc3339. parameter: from")
 	}
 
 	_, err = time.Parse(time.RFC3339, to)
 	if err != nil {
 		log.SetPrefix("ERROR: ")
 		log.Println(err)
-		return nil, errors.New("time format is not rfc3339")
+		return nil, errors.New("time format is not rfc3339. parameter: to")
 	}
 
 	config := config.LoadConfig()
