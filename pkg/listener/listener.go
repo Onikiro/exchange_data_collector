@@ -82,7 +82,7 @@ func handleWsEvent(writeAPI *api.WriteAPI) func(event *binance.WsBookTickerEvent
 	}
 }
 
-func createInfluxClient(config *config.Config) (*influxdb2.Client, *api.WriteAPI) {
+func createInfluxClient(config config.Config) (*influxdb2.Client, *api.WriteAPI) {
 	client := influxdb2.NewClient(config.InfluxUrl, config.InfluxToken)
 	writeAPI := client.WriteAPI(config.InfluxOrg, config.InfluxBucket)
 	return &client, &writeAPI

@@ -26,7 +26,10 @@ func Start() {
 func postConfig(c echo.Context) error {
 	symbol := c.FormValue("symbol")
 
-	db.AddConfig(symbol)
+	if !db.AddConfig(symbol) {
+		return c.NoContent(http.StatusBadRequest)
+	}
+
 	listener.Listen(symbol)
 
 	return c.JSON(http.StatusCreated, symbol)
@@ -41,7 +44,10 @@ func getConfigs(c echo.Context) error {
 // e.DELETE("/configs/:symbol", deleteConfig)
 func deleteConfig(c echo.Context) error {
 	symbol := c.Param("symbol")
-	db.DeleteConfig(symbol)
+	if !db.DeleteConfig(symbol) {
+		return c.NoContent(http.StatusNotFound)
+	}
+
 	listener.StopListening(symbol)
 	return c.JSON(http.StatusOK, symbol)
 }
