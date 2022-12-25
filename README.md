@@ -11,6 +11,21 @@ Features:
 
 * Endpoint to read saved data from InfluxDB
 
+Setup: 
+
+1.  `docker volume create --name=dbdata`
+
+2.  `docker volume create --name=influxdata`
+
+3. `docker compose up -d`
+
+4.  Setup influxDB in `localhost:8086`
+
+5. Fill envs from influxDB in docker-compose.yaml
+
+6. `docker-compose up -d --build --force-recreate`
+
+
 TODO: 
 
 - [x] Migrations (Create if not exists)
