@@ -7,6 +7,8 @@ import (
 )
 
 func main() {
+	db.ApplySchema()
+
 	for _, v := range db.GetConfigs() {
 		listener.Listen(v)
 	}

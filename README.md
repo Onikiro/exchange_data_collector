@@ -13,10 +13,10 @@ Features:
 
 TODO: 
 
-- [ ] Migrations
+- [x] Migrations (Create if not exists)
 
 - [ ] Tests
 
-- [ ] Add docker support
+- [x] Add docker support
 
-- [ ] Add docker-compose with sqlite db volume, influxdb and application
+- [x] Add docker-compose with sqlite db volume, influxdb and application

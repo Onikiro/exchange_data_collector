@@ -7,6 +7,18 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+func ApplySchema() {
+	db, err := sql.Open("sqlite3", "database.db")
+	logErr(err)
+	defer db.Close()
+
+	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS \"configs\" (  \"symbol\" TEXT NOT NULL UNIQUE,  PRIMARY KEY(\"symbol\") )")
+	logErr(err)
+
+	_, err = stmt.Exec()
+	logErr(err)
+}
+
 func AddConfig(symbol string) bool {
 	db, err := sql.Open("sqlite3", "database.db")
 	logErr(err)
@@ -60,7 +72,7 @@ func DeleteConfig(symbol string) bool {
 	logErr(err)
 	defer db.Close()
 
-	stmt, err := db.Prepare("delete from configs where symbol=?")
+	stmt, err := db.Prepare("DELETE FROM configs WHERE symbol=?")
 	logErr(err)
 
 	res, err := stmt.Exec(symbol)

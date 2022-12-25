@@ -1,0 +1,33 @@
+version: '3.9'
+services: 
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+    - "1323:1323"
+    expose:
+      - "1323"
+    environment:
+      - INFLUX_BUCKET=
+      - INFLUX_ORG=
+      - INFLUX_TOKEN=
+      - INFLUX_URL=
+    volumes:
+      - dbdata:/app
+
+  influx:
+    image: influxdb:2.6.0
+    restart: always
+    volumes:
+      - influxdata:/var/lib/influxdb2
+    expose:
+      - "8086"
+    ports:
+      - '8086:8086'
+
+volumes:
+  dbdata:
+    external: true
+  influxdata:
+    external: true
